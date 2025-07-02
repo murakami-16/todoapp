@@ -8,7 +8,7 @@ $(function(){
   $('#done_count').text(doneCount);
 
 //更新処理
-$('.todo input').change(function(){
+/*$('.todo input').change(function(){
 	const todo = $(this).parents('.todo');
 	const id = todo.find('input[name="id"]');
 	const title = todo.find('input[name="title"]');
@@ -49,7 +49,56 @@ $('.todo input').change(function(){
 	}
 
 
-})
+})*/
+
+//更新処理
+$('.todo input').change(function () {
+	const todo = $(this).parents('.todo');
+	const id = todo.find('input[name="id"]');
+	const title = todo.find('input[name="title"]');
+	const timeLimit = todo.find('input[name="time_limit"]');
+	const isDone = todo.find('input[name="done_flg"]').prop("checked");
+	let doneFlg = isDone ? 1 : 0;
+
+	const params = {
+		id: id.val(),
+		title: title.val(),
+		time_limit: timeLimit.val(),
+		done_flg: doneFlg
+	};
+
+	// Ajaxで更新＋バリデーション判定
+	$.post("/update", params)
+		.then(function (res) {
+			if (!res.success) {
+				const message = res.errors.map(e => e.defaultMessage).join('\n');
+				alert(message);
+				
+				return;
+			}
+			
+			// 完了ボタン押下後の動作（DOM更新）
+			let doneCount = parseInt($('#done_count').text(), 10) || 0;
+			
+			if ($(this).prop('name') === "done_flg") {
+				if (isDone) {
+					$(todo).appendTo('#donetodes');
+					todo.find('input[name="title"]').css('text-decoration', 'line-through');
+					todo.find('input[name="time_limit"]').hide();
+					doneCount++;
+				} else {
+					$(todo).appendTo('#todes');
+					todo.find('input[name="title"]').css('text-decoration', 'none');
+					todo.find('input[name="time_limit"]').show();
+					doneCount--;
+				}
+				$("#done_count").text(doneCount);
+			}
+		}.bind(this)) // ← bindして this を維持
+		.fail(function () {
+			alert('通信エラーが発生しました。もう一度お試しください。');
+		});
+});
 
 //完了済みタスク表示/非表示切り替え
 $('.button_for_show').click(function(){
@@ -64,7 +113,7 @@ $('.button_for_show').click(function(){
 })
 
 //追加処理
-$('#add').click(function() {
+/*$('#add').click(function() {
     const params = $('#add_form').serializeArray();
     $.post("/add",params).done(function(json){
         const clone = $('#todes tr:first').clone(true);
@@ -73,7 +122,34 @@ $('#add').click(function() {
         clone.find('input[name="time_limit"]').val(json.time_limit);
         $('#todes').append(clone[0]);
     })
-})
+})*/
+
+$('#add').click(function() {
+	const params = $('#add_form').serializeArray();
+	
+	$.post('/add', params)
+		.then(function(res) {
+			if(res.success){
+				// タスク行を複製し、新規タスクを反映
+				const clone = $('#todos tr:first').clone(true);
+				clone.find('input[name="id"]').val(res.todo.id);
+				clone.find('input[name="title"]').val(res.todo.title);
+				clone.find('input[name="time_limit"]').val(res.time_limit);
+				$('#todes').append(clone[0]);
+				
+				// モーダルを閉じてフォームを初期化
+				$('#modal').modal('hide');
+				$('#add_form')[0].reset();
+			} else {
+				// バリデーションエラー表示
+				const message = res.errors.map(e => e.defaultMessage).join('\n');
+				alert(message);
+			}
+		})
+		.fail(function() {
+			alert('通信に失敗しました。もう一度お試しください。');
+		});
+});
 
 //削除処理
 $('#delete').click(function(){
@@ -82,6 +158,5 @@ $('#delete').click(function(){
         $('#done_count').text(0);
     })
 })
-
 
 })

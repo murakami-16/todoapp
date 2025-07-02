@@ -8,7 +8,7 @@
 <link rel="stylesheet" th:href="@{/css/style.css}" />
 <title>TodoApp</title>
 </head>
-<div>
+<body>
 	<h1>TodoList</h1>
 	<h3>マイタスク</h3>
 	<table class="table table-borderless">
@@ -46,8 +46,7 @@
 		</tbody>
 	</table>
 
-
- 	<button type="button" class="btn btn-light rounded-circle p-0 text-muted font-weight-bold" data-toggle="modal"data-target="#modal"
+	<button type="button" class="btn btn-light rounded-circle p-0 text-muted font-weight-bold" data-toggle="modal"data-target="#modal"
 	style="width:2.5rem;height:2.5rem;">＋</button>
 		<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
 			<div class="modal-dialog">
@@ -58,10 +57,11 @@
 								<input type="text" name="title" class="form-control"placeholder="新しいタスク"/>
 							</div>
 							<div class="form-group">
-								<input type="date" name="time_limit"class="form-control" style="width:60%;" />
+								<input type="date" name="time_limit" class="form-control" style="width:60%;" />
 							</div>
 							<button type="button" class="btn btn-primary float-right"  data-dismiss="modal" id="add">追加</button>
 						</form>
+						<!-- <div id="error_area" class="mt-2"></div> -->
 					</div>
 				</div>
 			</div>
