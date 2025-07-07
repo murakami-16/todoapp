@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.todo.app.mapper.CategoryMapper">
+
+	<resultMap type="com.todo.app.entity.Category" id="category">
+		<id column="category_Id" property="category_id" />
+		<result column="title_Category" property="title_category" />
+	</resultMap>
+	
+	<select id="findAllCategory" resultType="com.todo.app.entity.Category">
+		SELECT * FROM categorys
+	</select>
+	
+	<select id="findById" resultType="com.todo.app.entity.Category" parameterType="int">
+    	SELECT * FROM categorys WHERE category_id = #{category_id}
+	</select>
+	
+
+</mapper>

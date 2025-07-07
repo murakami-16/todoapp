@@ -8,63 +8,26 @@ $(function(){
   $('#done_count').text(doneCount);
 
 //更新処理
-/*$('.todo input').change(function(){
+$('.todo input, .todo select').change(function () {
 	const todo = $(this).parents('.todo');
 	const id = todo.find('input[name="id"]');
 	const title = todo.find('input[name="title"]');
 	const timeLimit = todo.find('input[name="time_limit"]');
 	const isDone = todo.find('input[name="done_flg"]').prop("checked");
-	let doneFlg;
-	if(isDone == true) {
-	  doneFlg = 1;
-	}else{
-	  doneFlg = 0;
-	}
-
-	const params = {
-		id : id.val(),
-		title : title.val(),
-		time_limit : timeLimit.val(),
-		done_flg : doneFlg
-	}
-	$.post("/update",params);
-
-    //完了ボタンを押した際の処理
-    doneCount =  $('#done_count').text();
-
-	if($(this).prop('name') == "done_flg"){
-	  if(isDone == true){
-	    $(todo).appendTo('#donetodes');
-	    todo.find('input[name="title"]').css('text-decoration','line-through')
-	    todo.find('input[name="time_limit"]').hide();
-	    doneCount ++;
-	  }else{
-	    $(todo).appendTo('#todes');
-	    todo.find('input[name="title"]').css('text-decoration','none')
-	    todo.find('input[name="time_limit"]').show()
-	    doneCount --;
-	  }
-
-	  $("#done_count").text(doneCount);
-	}
-
-
-})*/
-
-//更新処理
-$('.todo input').change(function () {
-	const todo = $(this).parents('.todo');
-	const id = todo.find('input[name="id"]');
-	const title = todo.find('input[name="title"]');
-	const timeLimit = todo.find('input[name="time_limit"]');
-	const isDone = todo.find('input[name="done_flg"]').prop("checked");
+	const priority = todo.find('select[name="priority"]');
+	const category = todo.find('select[name="category_id"]');
+	const isDone2 = todo.find('input[name="done_flg2"]').prop("checked");
 	let doneFlg = isDone ? 1 : 0;
+	let doneFlg2 = isDone2 ? 1 : 0;
 
 	const params = {
 		id: id.val(),
 		title: title.val(),
 		time_limit: timeLimit.val(),
-		done_flg: doneFlg
+		priority: priority.val(),
+		category_id: category.val(),
+		done_flg: doneFlg,
+		done_flg2: doneFlg2
 	};
 
 	// Ajaxで更新＋バリデーション判定
@@ -85,11 +48,17 @@ $('.todo input').change(function () {
 					$(todo).appendTo('#donetodes');
 					todo.find('input[name="title"]').css('text-decoration', 'line-through');
 					todo.find('input[name="time_limit"]').hide();
+					todo.find('select[name="priority"]').hide();
+					todo.find('select[name="category_id"]').hide();
+					todo.find('input[name="done_flg2"]').hide();
 					doneCount++;
 				} else {
 					$(todo).appendTo('#todes');
 					todo.find('input[name="title"]').css('text-decoration', 'none');
 					todo.find('input[name="time_limit"]').show();
+					todo.find('select[name="priority"]').show();
+					todo.find('select[name="category_id"]').show();
+					todo.find('input[name="done_flg2"]').show();
 					doneCount--;
 				}
 				$("#done_count").text(doneCount);
@@ -113,17 +82,6 @@ $('.button_for_show').click(function(){
 })
 
 //追加処理
-/*$('#add').click(function() {
-    const params = $('#add_form').serializeArray();
-    $.post("/add",params).done(function(json){
-        const clone = $('#todes tr:first').clone(true);
-        clone.find('input[name="id"]').val(json.id);
-        clone.find('input[name="title"]').val(json.title);
-        clone.find('input[name="time_limit"]').val(json.time_limit);
-        $('#todes').append(clone[0]);
-    })
-})*/
-
 $('#add').click(function() {
 	const params = $('#add_form').serializeArray();
 	
@@ -135,6 +93,8 @@ $('#add').click(function() {
 				clone.find('input[name="id"]').val(res.todo.id);
 				clone.find('input[name="title"]').val(res.todo.title);
 				clone.find('input[name="time_limit"]').val(res.time_limit);
+				clone.find('select[name="priority"]').val(res.priority);
+				clone.find('select[name="category_id"]').val(res.todo.category_id);
 				$('#todes').append(clone[0]);
 				
 				// モーダルを閉じてフォームを初期化

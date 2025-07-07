@@ -20,5 +20,7 @@ public interface TodoMapper {
 	public void update(Todo todo);
 
 	public void delete();
+	
+	public void deleteById(int id);
 
 }

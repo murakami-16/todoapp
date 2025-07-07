@@ -20,8 +20,27 @@
 					<input type="checkbox"name="done_flg"/>
 					<input type="hidden" name="id" th:value="${todo.id}" />
 				</td>
-				<td  style="width:22rem"><input type="text" style="border:none;width:22rem" name="title" th:value="${todo.title}"/></td>
-				<td><input type="date" style="border:none" name="time_limit" th:value="${todo.time_limit}" /></td>
+				<td style="width:22rem"><input type="text" style="border:none;width:22rem" name="title" th:value="${todo.title}"/></td>
+				<td style="width:8rem"><input type="date" style="border:none;width:8rem" name="time_limit" th:value="${todo.time_limit}" /></td>
+				<td style="width:5rem">
+					<select name="priority" class="form-controll" style="width:5rem">
+						<option value="priority01" th:selected="${todo.priority == 'priority01'}">低</option>
+						<option value="priority02" th:selected="${todo.priority == 'priority02'}">中</option>
+						<option value="priority03" th:selected="${todo.priority == 'priority03'}">高</option>
+					</select>
+				</td>
+				<td style="width:7rem">
+					<select name="category_id" class="form-controll" style="width:7rem">
+						<option th:each="cat : ${categories}"
+								th:value="${cat.category_id}"
+								th:text="${cat.title_category}"
+								th:selected="${cat != null and todo != null and cat.category_id == todo.category_id}">
+						</option>
+					</select>
+				</td>
+				<td>
+					<input type="checkbox" style="width:2rem" name="done_flg2"/>
+				</td>
 			</tr>
 		</tbody>
 	</table>
@@ -42,6 +61,7 @@
 				</td>
 				<td  style="width:22rem"><input type="text" style="border:none;width:22rem;text-decoration:line-through" name="title" th:value="${todo.title}"/></td>
 				<td><input type="date"style="border:none;display:none" name="time_limit" th:value="${todo.time_limit}" /></td>
+				<td></td>
 			</tr>
 		</tbody>
 	</table>
@@ -59,14 +79,32 @@
 							<div class="form-group">
 								<input type="date" name="time_limit" class="form-control" style="width:60%;" />
 							</div>
+							<div class="form-group">
+								<select name="priority" class="form-control" style="width:20%;">
+									<option value="" selected>優先度</option>
+									<option value="priority01">低</option>
+									<option value="priority02">中</option>
+									<option value="priority03">高</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<select name="category_id" class="form-control" style="width:30%;">
+									<option value="" selected>カテゴリ</option>
+									<option th:each="cat : ${categories}"
+											th:value="${cat.category_id}"
+											th:text="${cat.title_category}"
+											th:selected="${cat != null and todo != null and cat.category_id == todo.category_id}">
+									</option>
+								</select>
+							</div>
 							<button type="button" class="btn btn-primary float-right"  data-dismiss="modal" id="add">追加</button>
 						</form>
-						<!-- <div id="error_area" class="mt-2"></div> -->
 					</div>
 				</div>
 			</div>
 		</div>
 	<button type="button" class="btn btn-outline-secondary" id="delete">完了済みを削除</button>
+	<button type="button" class="btn btn-outline-secondary" id="delete">削除</button>
 
 	<script type="text/javascript" th:src="@{/js/todo.js}"></script>
 </body>

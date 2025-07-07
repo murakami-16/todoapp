@@ -15,7 +15,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.todo.app.entity.Category;
 import com.todo.app.entity.Todo;
+import com.todo.app.mapper.CategoryMapper;
 import com.todo.app.mapper.TodoMapper;
 
 @Controller
@@ -25,6 +27,9 @@ public class TodoController {
 	
 	@Autowired
 	TodoMapper todoMapper;
+	
+	@Autowired
+	CategoryMapper categoryMapper;
 
 	@RequestMapping(value="/")
 	public String index(Model model) {
@@ -34,24 +39,17 @@ public class TodoController {
 
 		List<Todo> list = todoMapper.selectIncomplete();
 		List<Todo> doneList = todoMapper.selectComplete();
+		List<Category> categories = categoryMapper.findAllCategory();
 		
 		logger.debug("list:" + list.size() + "件");
 		logger.debug("doneList:" + doneList.size() + "件");
 		
 		model.addAttribute("todos", list);
 		model.addAttribute("doneTodos", doneList);
+		model.addAttribute("categories", categories);
 
 		return "index";
 	}
-
-	/*@RequestMapping(value="/add")
-	@ResponseBody
-	public Todo add(Todo todo) {
-		logger.info("アクセス：/add");
-		
-		todoMapper.add(todo);
-		return todo;
-	}*/
 	
 	@RequestMapping(value="/add")
 	@ResponseBody
@@ -73,14 +71,6 @@ public class TodoController {
 		
 		return response;
 	}
-
-	/*@RequestMapping(value="/update")
-	@ResponseBody
-	public void update(Todo todo) {
-		logger.info("アクセス：/update");
-		
-		todoMapper.update(todo);
-	}*/
 	
 	@RequestMapping(value="/update")
 	@ResponseBody

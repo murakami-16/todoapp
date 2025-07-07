@@ -1,6 +1,8 @@
 package com.todo.app.entity;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -35,10 +37,9 @@ public class Todo {
 	
 	private Long parent_id;
 	
+	@NotNull(message = "カテゴリを選択してください")
+	@Min(value = 1, message = "カテゴリ以外を選択してください")
 	private Integer category_id;
-
-	//@Pattern(regexp = "title_category0[1-4]", message = "カテゴリ以外を選択して下さい。")
-	private String title_category;
 	
 	private String title_memo;
 	
