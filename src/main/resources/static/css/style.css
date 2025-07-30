@@ -9,3 +9,9 @@
 	position:relative;
 	bottom:4px
 }
+
+.child-task td {
+	padding-left: 20rem !important;
+	background-color: #000 !important;
+	border-left: 4px solid #aaa;
+}

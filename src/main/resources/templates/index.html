@@ -6,6 +6,11 @@
 <link rel="stylesheet" href="webjars/bootstrap/4.6.0/css/bootstrap.min.css" />
 <script src="webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
 <link rel="stylesheet" th:href="@{/css/style.css}" />
+<style>
+	.child-task td {
+		padding-left: 3rem;
+	}
+</style>
 <title>TodoApp</title>
 </head>
 <body>
@@ -15,10 +20,13 @@
 		<thead>
 		</thead>
 		<tbody id="todes">
-			<tr class="todo" th:each="todo : ${todos}">
+			<tr class="todo" th:each="todo : ${todos}" 
+				th:classappend="${todo.parent_id != null} ? 'child-task' : ''" 
+				th:attr="data-parent-id=${todo.parent_id}">
 				<td style="width:2rem">
 					<input type="checkbox"name="done_flg"/>
 					<input type="hidden" name="id" th:value="${todo.id}" />
+					<input type="hidden" name="parent_id" th:value="${todo.parent_id}" />
 				</td>
 				<td style="width:22rem"><input type="text" style="border:none;width:22rem" name="title" th:value="${todo.title}"/></td>
 				<td style="width:8rem"><input type="date" style="border:none;width:8rem" name="time_limit" th:value="${todo.time_limit}" /></td>
@@ -37,6 +45,51 @@
 								th:selected="${cat != null and todo != null and cat.category_id == todo.category_id}">
 						</option>
 					</select>
+				</td>
+				<td th:if="${todo.parent_id == null}" style="width:10rem">
+					<button type="button" class="btn btn-light rounded-radius p-0 text-muted font-weight-bold" data-toggle="modal"data-target="#modalC"
+					style="width:10rem;border:1px solid black;">子タスクを追加</button>
+					<div class="modal fade" id="modalC" tabindex="-1" role="dialog">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-body">
+									<form id="add_form_c">
+										<input type="hidden" name="parent_id" value="親タスクのID">
+										<input type="hidden" name="parent_title" value="親タスク名">
+										<div class="form-group">
+											<input type="text" style="border:none;width:22rem" id="parent_title" name="parent_title" readonly>
+											<!--<input type="text" style="border:none;width:22rem" name="title" readonly />-->
+										</div>
+										<div class="form-group">
+											<input type="text" name="title" class="form-control"placeholder="新しい子タスク"/>
+										</div>
+										<div class="form-group">
+											<input type="date" name="time_limit" class="form-control" style="width:60%;" />
+										</div>
+										<div class="form-group">
+											<select name="priority" class="form-control" style="width:20%;" th:value="${todo.id}">
+												<option value="" selected>優先度</option>
+												<option value="priority01">低</option>
+												<option value="priority02">中</option>
+												<option value="priority03">高</option>
+											</select>
+										</div>
+										<div class="form-group">
+											<select name="category_id" class="form-control" style="width:30%;">
+												<option value="" selected>カテゴリ</option>
+												<option th:each="cat : ${categories}"
+													th:value="${cat.category_id}"
+													th:text="${cat.title_category}"
+													th:selected="${cat != null and todo != null and cat.category_id == todo.category_id}">
+												</option>
+											</select>
+										</div>
+										<button type="button" class="btn btn-primary float-right" data-dismiss="modal" id="add_c">追加</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
 				</td>
 				<td>
 					<input type="checkbox" style="width:2rem" name="done_flg2"/>
@@ -66,13 +119,13 @@
 		</tbody>
 	</table>
 
-	<button type="button" class="btn btn-light rounded-circle p-0 text-muted font-weight-bold" data-toggle="modal"data-target="#modal"
+	<button type="button" class="btn btn-light rounded-circle p-0 text-muted font-weight-bold" data-toggle="modal"data-target="#modalAdd"
 	style="width:2.5rem;height:2.5rem;">＋</button>
-		<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+		<div class="modal fade" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-body">
-						<form id="add_form">
+						<form id="add_form_a">
 							<div class="form-group">
 								<input type="text" name="title" class="form-control"placeholder="新しいタスク"/>
 							</div>
@@ -97,14 +150,14 @@
 									</option>
 								</select>
 							</div>
-							<button type="button" class="btn btn-primary float-right"  data-dismiss="modal" id="add">追加</button>
+							<button type="button" class="btn btn-primary float-right" data-dismiss="modal" id="add_t">追加</button>
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
 	<button type="button" class="btn btn-outline-secondary" id="delete">完了済みを削除</button>
-	<button type="button" class="btn btn-outline-secondary" id="delete">削除</button>
+	<button type="button" class="btn btn-outline-danger" id="delete_done_flg2">削除</button>
 
 	<script type="text/javascript" th:src="@{/js/todo.js}"></script>
 </body>

@@ -21,6 +21,9 @@ public interface TodoMapper {
 
 	public void delete();
 	
-	public void deleteById(int id);
+	// 追加：done_flg2=1 の行を一括削除
+	public void deleteDoneFlg2();
+	
+	public List<Todo> selectIncompleteWithOrder();
 
 }
