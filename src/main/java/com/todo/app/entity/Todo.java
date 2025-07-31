@@ -44,22 +44,4 @@ public class Todo {
 	private String title_memo;
 	
 	private String parent_title;
-    
-    // 手動でgetterとsetterを定義
-    public int getDone_flg() {
-        return done_flg;
-    }
-
-    public void setDone_flg(int done_flg) {
-        this.done_flg = done_flg;
-    }
-
-    public Long getParent_id() {
-        return parent_id;
-    }
-
-    public void setParent_id(Long parent_id) {
-        this.parent_id = parent_id;
-    }
-	
 }
